@@ -174,12 +174,25 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     >>> values = find_possible_values(grid, (4,7))
     >>> values == {'2', '5', '9'}
     True
+    >>> values = find_possible_values(grid, (8,4))
+    >>> values == {'3', '5'}
+    True
+    >>> values = find_possible_values(grid, (8,8))
+    >>> values == {'4'}
+    True
     """
-    pass
-
+    not_pos_val = set()
+    pos_val = set()
+    [not_pos_val.add(i) for i in get_block(grid, pos)]
+    [not_pos_val.add(i) for i in get_row(grid, pos)]
+    [not_pos_val.add(i) for i in get_col(grid, pos)]
+    for j in range(1,10):
+        if str(j) not in not_pos_val:
+            pos_val.add(str(j))
+    return pos_val
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
-    """ Решение пазла, заданного в grid """
+    #""" Решение пазла, заданного в grid """
     """ Как решать Судоку?
         1. Найти свободную позицию
         2. Найти все возможные значения, которые могут находиться на этой позиции
@@ -190,8 +203,26 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    pass
-
+    empty_pos = find_empty_positions(grid)
+    if empty_pos == ():
+        return grid
+    row, col = empty_pos
+    pos_val = find_possible_values(grid, empty_pos)
+    print(pos_val)
+    if pos_val != set():
+        for i in pos_val:
+            grid[row][col] = i
+        print(display(grid), "\n")
+        return solve(grid)
+    empty_pos = find_empty_positions(grid)
+    row, col = empty_pos
+    pos_val = find_possible_values(grid, empty_pos)
+    print(pos_val)
+    for i in pos_val:
+        grid[row][col] = i
+    print(display(grid), "\n")
+    return grid
+    # *_*
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
