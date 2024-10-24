@@ -1,7 +1,7 @@
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
-    >>> encrypt_caesar("PYTHON")
+    >>> encrypt_caesar("PYTHON", 10)
     'SBWKRQ'
     >>> encrypt_caesar("python")
     'sbwkrq'
