@@ -230,9 +230,30 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
-    """ Если решение solution верно, то вернуть True, в противном случае False """
-    # TODO: Add doctests with bad puzzles
-    pass
+    """ Если решение solution верно, то вернуть True, в противном случае False
+    >>> grid = read_sudoku('puzzle1.txt')
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    >>> grid = read_sudoku('puzzle2.txt')
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    >>> grid = read_sudoku('puzzle3.txt')
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    """
+    row = 0
+    for i in solution:
+        for col in range(len(i)):
+            if get_block(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1:
+                print(get_row(solution, (row, col)))
+                return False
+        row += 1
+    return True
+
+
 
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
