@@ -2,6 +2,8 @@ import pathlib
 import typing as tp
 import math
 
+from Tools.scripts.make_ctype import values
+
 T = tp.TypeVar("T")
 
 
@@ -204,25 +206,22 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
     empty_pos = find_empty_positions(grid)
-    if empty_pos == ():
+    if len(empty_pos) == 0:
         return grid
     row, col = empty_pos
-    pos_val = find_possible_values(grid, empty_pos)
-    print(pos_val)
-    if pos_val != set():
-        for i in pos_val:
-            grid[row][col] = i
-        print(display(grid), "\n")
-        return solve(grid)
-    empty_pos = find_empty_positions(grid)
-    row, col = empty_pos
-    pos_val = find_possible_values(grid, empty_pos)
-    print(pos_val)
-    for i in pos_val:
-        grid[row][col] = i
-    print(display(grid), "\n")
-    return grid
-    # *_*
+    pos_values = find_possible_values(grid, empty_pos)
+    for value in pos_values:
+        grid[row][col] = value
+        if solve(grid):
+            return grid
+        grid[row][col]= '.'
+    return None
+
+
+
+
+
+
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
