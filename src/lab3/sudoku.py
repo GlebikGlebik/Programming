@@ -1,6 +1,7 @@
 import pathlib
 import typing as tp
 import math
+from random import *
 
 from Tools.scripts.make_ctype import values
 
@@ -248,7 +249,7 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     for i in solution:
         for col in range(len(i)):
             if get_block(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1:
-                print(get_row(solution, (row, col)))
+                #print(get_row(solution, (row, col)))
                 return False
         row += 1
     return True
@@ -277,8 +278,20 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
-
+    sudoku = []
+    n = N - (N // 9) * 9
+    for i in range(9):
+        string = []
+        for j in range(N // 9):
+            string.append(str(randrange(0,10)))
+        if n != 0:
+            string.append(str(randrange(0,10)))
+            n -= 1
+        for k in range(9 - len(string)):
+            string.append('.')
+        shuffle(string)
+        sudoku.append(string)
+    return sudoku
 
 if __name__ == "__main__":
     for fname in ["puzzle1.txt", "puzzle2.txt", "puzzle3.txt"]:
