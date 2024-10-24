@@ -244,6 +244,9 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     >>> solution = solve(grid)
     >>> check_solution(solution)
     True
+    >>> solution = solve([['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.'], ['.', '.', '.', '.', '.', '.', '.', '.', '.']])
+    >>> check_solution(solution)
+    True
     """
     row = 0
     for i in solution:
@@ -253,8 +256,6 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
                 return False
         row += 1
     return True
-
-
 
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
@@ -278,19 +279,13 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    sudoku = []
-    n = N - (N // 9) * 9
-    for i in range(9):
-        string = []
-        for j in range(N // 9):
-            string.append(str(randrange(0,10)))
-        if n != 0:
-            string.append(str(randrange(0,10)))
-            n -= 1
-        for k in range(9 - len(string)):
-            string.append('.')
-        shuffle(string)
-        sudoku.append(string)
+
+    pre_sudoku = [['.' for _ in range(9)] for _ in range(9)]
+    sudoku = solve(pre_sudoku)
+    positions = [(row,col) for row in range(9) for col in range(9)]
+    shuffle(positions)
+    for row, col in positions[N:]:
+        sudoku[row][col] = '.'
     return sudoku
 
 if __name__ == "__main__":
