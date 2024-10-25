@@ -71,10 +71,8 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     if len(values) // n != n:
         raise ValueError("Данный список невозможно поделить на подcписки с таким количеством элементов")
     for i in range(0, len(values), n):
-        group_elements.append(values[i : i + n])
+        group_elements.append(values[i: i + n])
     return group_elements
-
-
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -168,6 +166,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
         row += 1
     return empty_pos
 
+
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
     """Вернуть множество возможных значения для указанной позиции
     >>> grid = read_sudoku('puzzle1.txt')
@@ -189,13 +188,14 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     [not_pos_val.add(i) for i in get_block(grid, pos)]
     [not_pos_val.add(i) for i in get_row(grid, pos)]
     [not_pos_val.add(i) for i in get_col(grid, pos)]
-    for j in range(1,10):
+    for j in range(1, 10):
         if str(j) not in not_pos_val:
             pos_val.add(str(j))
     return pos_val
 
+
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
-    #""" Решение пазла, заданного в grid """
+    # """ Решение пазла, заданного в grid """
     """ Как решать Судоку?
         1. Найти свободную позицию
         2. Найти все возможные значения, которые могут находиться на этой позиции
@@ -221,13 +221,8 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
         grid[row][col] = value
         if solve(grid):
             return grid
-        grid[row][col]= '.'
+        grid[row][col] = '.'
     return None
-
-
-
-
-
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
@@ -251,8 +246,8 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     row = 0
     for i in solution:
         for col in range(len(i)):
-            if get_block(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1:
-                #print(get_row(solution, (row, col)))
+            if get_block(solution, (row, col)).count(i[col]) > 1 or get_row(solution, (row, col)).count(
+                    i[col]) > 1 or get_row(solution, (row, col)).count(i[col]) > 1:
                 return False
         row += 1
     return True
@@ -282,11 +277,12 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
 
     pre_sudoku = [['.' for _ in range(9)] for _ in range(9)]
     sudoku = solve(pre_sudoku)
-    positions = [(row,col) for row in range(9) for col in range(9)]
+    positions = [(row, col) for row in range(9) for col in range(9)]
     shuffle(positions)
     for row, col in positions[N:]:
         sudoku[row][col] = '.'
     return sudoku
+
 
 if __name__ == "__main__":
     for fname in ["puzzle1.txt", "puzzle2.txt", "puzzle3.txt"]:
