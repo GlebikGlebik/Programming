@@ -1,5 +1,5 @@
 import unittest
-from src.lab3.sudoku import *
+from src.lab2.sudoku import *
 
 
 class Get_test_find_empty_positionsTestCase(unittest.TestCase):
