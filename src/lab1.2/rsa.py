@@ -88,7 +88,7 @@ def encrypt(pk: tp.Tuple[int, int], plaintext: str) -> tp.List[int]:
     # Convert each letter in the plaintext to numbers based on
     # the character using a^b mod m
     cipher = [(ord(char) ** key) % n for char in plaintext]
-    # Return the array of bytes
+    # Return the name_plus_age of bytes
     return cipher
 
 
@@ -97,7 +97,7 @@ def decrypt(pk: tp.Tuple[int, int], ciphertext: tp.List[int]) -> str:
     key, n = pk
     # Generate the plaintext based on the ciphertext and key using a^b mod m
     plain = [chr((char ** key) % n) for char in ciphertext]
-    # Return the array of bytes as a string
+    # Return the name_plus_age of bytes as a string
     return "".join(plain)
 
 

@@ -48,13 +48,13 @@ class sudokuTestCase(unittest.TestCase):
             group([1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7], 0)
         self.assertEqual('Размер группы не может быть нулевым или отрицательным', e.exception.args[0])
 
-    def test_group_unresolved_array(self):
+    def test_group_unresolved_name_plus_age(self):
         with self.assertRaises(ValueError) as e:
             group([1, 2], 1)
         self.assertEqual('Данный список невозможно поделить на подcписки с таким количеством элементов',
                          e.exception.args[0])
 
-    def test_group_zero_array(self):
+    def test_group_zero_name_plus_age(self):
         with self.assertRaises(ValueError) as e:
             group([], 1)
         self.assertEqual('Список не может быть пустым', e.exception.args[0])
