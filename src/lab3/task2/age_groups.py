@@ -3,18 +3,10 @@ class Survey:
         '''
         Инициализация переменных класса
         '''
-        self.age_groups = {
-            '0-18': [],
-            '19-25': [],
-            '26-35': [],
-            '36-45': [],
-            '46-60': [],
-            '61-80': [],
-            '81-100': [],
-            '101+': []
-        }
         self.name_plus_age = []
         self.res = ''
+        self.groups = []
+        self.age_groups = {}
 
     def get_name_plus_age(self):
         """
@@ -33,23 +25,23 @@ class Survey:
         Данная функция сортирует респондентов по их возрастным группам и добавляет полученные данные в словарь 'age_groups', где key - это возрастная группа,
         а value - список кортежей, где каждый кортеж содержит имя и возраст участника. Также данная функция сортирует возрастные группы.
         """
-        for age, name in self.name_plus_age: # Разбитие списка всех респондентов на возрастные группы
-            if age <= 18:
-                self.age_groups['0-18'].append((name, age))
-            elif age <= 25:
-                self.age_groups['19-25'].append((name, age))
-            elif age <= 35:
-                self.age_groups['26-35'].append((name, age))
-            elif age <= 45:
-                self.age_groups['36-45'].append((name, age))
-            elif age <= 60:
-                self.age_groups['46-60'].append((name, age))
-            elif age <= 80:
-                self.age_groups['61-80'].append((name, age))
-            elif age <= 100:
-                self.age_groups['81-100'].append((name, age))
-            else:
-                self.age_groups['101+'].append((name, age))
+        for j in self.groups:
+            for age, name in self.name_plus_age: # Разбитие списка всех респондентов на возрастные группы
+                if age <= j == self.groups[0]:
+                    self.age_groups[f'0-{j}'] = []
+                elif age > j == self.groups[-1]:
+                    self.age_groups[f'{j}+'] = []
+                elif age <= j:
+                    self.age_groups[f'{self.groups[self.groups.index(j) - 1] + 1}-{j}'] = []
+
+        for i in self.groups:
+            for age, name in self.name_plus_age: # Разбитие списка всех респондентов на возрастные группы
+                if age <= i == self.groups[0]:
+                    self.age_groups[f'0-{i}'].append((name, age))
+                elif age > i == self.groups[-1]:
+                    self.age_groups[f'{i}+'].append((name, age))
+                elif self.groups[self.groups.index(i) - 1] < age <= i:
+                    self.age_groups[f'{self.groups[self.groups.index(i) - 1] + 1}-{i}'].append((name, age))
 
         for group in self.age_groups:
             self.age_groups[group] = sorted(self.age_groups[group], key=lambda x: (-int(x[1]), x[0])) # Сортировка возрастных групп
@@ -83,6 +75,7 @@ def main():
     В данной функции инициализируется экземпляр класса и вызывается результирующая функция класса.
     """
     kino = Survey()
+    kino.groups = list(map(int,input().split()))
     res = kino.result()
     print(res)
 
