@@ -1,11 +1,17 @@
 class MovieRecommendation:
     def __init__(self):
+        '''
+        Инициализация переменных класса
+        '''
         self.film_id = ''
         self.users_history = []
         self.main_user_history = []
         self.film_name = ''
 
     def films(self):
+        """
+        Данная функция вывод название рекомендуемого фильма из файла 'films' по его id
+        """
         with open('films.txt', 'r', encoding='utf-8') as f:
             films_input = f.read().split('\n')
             films_input = [i.split(",") for i in films_input if i != '']
@@ -18,6 +24,9 @@ class MovieRecommendation:
         return self.film_name
 
     def history_of_watch(self):
+        """
+        Данная функция считывает глобальную историю просмотров из файла 'users'
+        """
         with open("users.txt", 'r') as f:
             users_history_input = f.read().split('\n')
             for i in users_history_input:
@@ -29,6 +38,9 @@ class MovieRecommendation:
         return self.users_history
 
     def find_film_id(self):
+        """
+        Данная функция подбирает рекомендуемый фильм для пользователя на основе его истории просмотров и общей истории просмотров среди всех пользователей сервиса
+        """
         suitable_history = []
         for i in self.users_history:
             count = 0
@@ -52,11 +64,17 @@ class MovieRecommendation:
         return self.film_id
 
     def result(self):
+        """
+        Данная функция задает порядок выполнения методов класса.
+        """
         self.history_of_watch()
         self.find_film_id()
         return self.films()
 
 def main():
+    """
+    В данной функции инициализируется экземпляр класса и вызывается результирующая функция класса.
+    """
     user = MovieRecommendation()
     user.main_user_history = input("Введите id фильмов:",).split(',')
     res = user.result()
