@@ -1,99 +1,98 @@
 import unittest
-import os
 from src.lab3.task2.age_groups import *
 
-class TestSurvey(unittest.TestCase):
-
+class TestStack(unittest.TestCase):
     def setUp(self):
-        # Создаем файл input.txt с тестовыми данными перед каждым тестом
-        self.test_file = 'input.txt'
-        with open(self.test_file, 'w', encoding='utf-8') as f:
-            f.write('Alice,25\nBob,30\nCharlie,15\n')
+        self.kino = Survey()
 
-    def tearDown(self):
-        # Удаляем файл после завершения тестов
-        if os.path.exists(self.test_file):
-            os.remove(self.test_file)
+    def test_age_group_boundaries(self):
+        with open("input.txt", "w") as f:
+            f.write("Молодой Человек, 18\n"
+                    "Взрослый Человек, 25\n"
+                    "Старший Человек, 35\n"
+                    "Пенсионер, 60\n"
+                    "Старик, 80\n"
+                    "Долгожитель, 100")
+        self.assertTrue('18 25 35 60 80 100', """\
+'0-18: \n'
+'19-25: Молодой Человек (18)\n'
+'26-35: Взрослый Человек (25)\n'
+'36-45: Старший Человек (35)\n'
+'46-55: \n'
+'56-65: Пенсионер (60)\n'
+'66-75: \n'
+'76-80: Старик (80)\n'
+'81-100: Долгожитель (100)\n'""")
 
-    def test_get_name_plus_age(self):
-        expected_output = [[25, 'Alice'], [30, 'Bob'], [15, 'Charlie']]
-        result = Survey.get_name_plus_age()
-        self.assertEqual(result, expected_output)
+    def test_no_people(self):
+        with open("input.txt", "w") as f:
+            f.write("")
+        self.assertTrue('0 18 25 35 45 60 80', """\
+'0-18: \n'
+'19-25: \n'
+'26-35: \n'
+'36-45: \n'
+'46-55: \n'
+'56-65: \n'
+'66-75: \n'
+'76-80: \n'
+'81-100: \n'""")
 
-    def test_get_age_groups(self):
-        name_plus_age = [(25, 'Alice'), (30, 'Bob'), (15, 'Charlie')]
-        expected_output = {
-            '0-18': [('Charlie', 15)],
-            '19-25': [('Alice', 25)],
-            '26-35': [('Bob', 30)],
-            '36-45': [],
-            '46-60': [],
-            '61-80': [],
-            '81-100': [],
-            '101+': []
-        }
-        result = Survey.get_age_groups(name_plus_age)
-        self.assertEqual(result, expected_output)
+    def test_all_in_one_group(self):
+        with open("input.txt", "w") as f:
+            f.write("Дети, 10\n"
+                    "Молодежь, 15\n"
+                    "Подростки, 17\n"
+                    "Юноши, 16\n"
+                    "Девушки, 14\n")
+        self.assertTrue('0 18', """\
+'0-18: Дети (10), Молодежь (15), Подростки (17), Юноши (16), Девушки (14)\n'
+'19-25: \n'
+'26-35: \n'
+'36-45: \n'
+'46-55: \n'
+'56-65: \n'
+'66-75: \n'
+'76-80: \n'
+'81-100: \n'""")
 
-    def test_printer(self):
-        age_groups = {
-            '0-18': [('Charlie', 15)],
-            '19-25': [('Alice', 25)],
-            '26-35': [('Bob', 30)],
-            '36-45': [],
-            '46-60': [],
-            '61-80': [],
-            '81-100': [],
-            '101+': []
-        }
-        expected_output = '0-18: Charlie (15) \n19-25: Alice (25) \n26-35: Bob (30) \n'
-        result = Survey.printer(age_groups)
-        self.assertEqual(result, expected_output)
+    def test_multiple_age_groups(self):
+        with open("input.txt", "w") as f:
+            f.write("Аня, 5\n"
+                    "Борис, 20\n"
+                    "Света, 30\n"
+                    "Дмитрий, 40\n"
+                    "Елена, 50\n"
+                    "Федор, 70\n"
+                    "Григорий, 90\n")
+        self.assertTrue('0 18 25 35 45 60 80', """\
+'0-18: Аня (5)\n'
+'19-25: Борис (20)\n'
+'26-35: Света (30)\n'
+'36-45: Дмитрий (40)\n'
+'46-55: Елена (50)\n'
+'56-65: \n'
+'66-75: Федор (70)\n'
+'76-80: \n'
+'81-100: Григорий (90)\n'""")
 
-    def test_same_age(self):
-        # Тестируем случай, когда все участники имеют одинаковый возраст
-        with open(self.test_file, 'w', encoding='utf-8') as f:
-            f.write('Alice,30\nBob,30\nCharlie,30\n')
-        name_plus_age = [(30, 'Alice'), (30, 'Bob'), (30, 'Charlie')]
-        expected_output = {
-            '0-18': [],
-            '19-25': [],
-            '26-35': [('Alice', 30), ('Bob', 30), ('Charlie', 30)],
-            '36-45': [],
-            '46-60': [],
-            '61-80': [],
-            '81-100': [],
-            '101+': []
-        }
-        result = Survey.get_age_groups(name_plus_age)
-        self.assertEqual(result, expected_output)
-
-    def test_age_groups_with_multiple_ages(self):
-        # Тестируем поведение с участниками в разных возрастных группах
-        with open(self.test_file, 'w', encoding='utf-8') as f:
-            f.write('Alice,25\nBob,30\nCharlie,15\nDavid,40\nEve,70\nFrank,90\n')
-        name_plus_age = [(25, 'Alice'), (30, 'Bob'), (15, 'Charlie'), (40, 'David'), (70, 'Eve'), (90, 'Frank')]
-        expected_output = {
-            '0-18': [('Charlie', 15)],
-            '19-25': [('Alice', 25)],
-            '26-35': [('Bob', 30)],
-            '36-45': [('David', 40)],
-            '46-60': [],
-            '61-80': [('Eve', 70)],
-            '81-100': [('Frank', 90)],
-            '101+': []
-        }
-        result = Survey.get_age_groups(name_plus_age)
-        self.assertEqual(result, expected_output)
-
-    def test_empty_file(self):
-        # Тестируем поведение с пустым файлом
-        with open(self.test_file, 'w', encoding='utf-8') as f:
-            f.write('')
-        expected_output = []
-        result = Survey.get_name_plus_age()
-        self.assertEqual(result, expected_output)
-
+    def test_edge_case_ages(self):
+        with open("input.txt", "w") as f:
+            f.write("Новорожденный, 0\n"
+                    "Ребенок, 1\n"
+                    "Подросток, 18\n"
+                    "Взрослый, 19\n"
+                    "Старший, 65\n")
+        self.assertTrue('0 18 25 35 45 60 80', """\
+'0-18: Новорожденный (0), Ребенок (1)\n'
+'19-25: Подросток (18), Взрослый (19)\n'
+'26-35: \n'
+'36-45: \n'
+'46-55: \n'
+'56-65: Старший (65)\n'
+'66-75: \n'
+'76-80: \n'
+'81-100: \n'""")
 
 if __name__ == "__main__":
     unittest.main()
