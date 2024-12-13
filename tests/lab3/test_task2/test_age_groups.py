@@ -1,98 +1,76 @@
 import unittest
-from src.lab3.task2.age_groups import *
+from src.lab3.task2.age_groups import Survey
 
-class TestStack(unittest.TestCase):
+
+class TestSurvey(unittest.TestCase):
     def setUp(self):
         self.kino = Survey()
 
-    def test_age_group_boundaries(self):
-        with open("input.txt", "w") as f:
-            f.write("Молодой Человек, 18\n"
-                    "Взрослый Человек, 25\n"
-                    "Старший Человек, 35\n"
-                    "Пенсионер, 60\n"
-                    "Старик, 80\n"
-                    "Долгожитель, 100")
-        self.assertTrue('18 25 35 60 80 100', """\
-'0-18: \n'
-'19-25: Молодой Человек (18)\n'
-'26-35: Взрослый Человек (25)\n'
-'36-45: Старший Человек (35)\n'
-'46-55: \n'
-'56-65: Пенсионер (60)\n'
-'66-75: \n'
-'76-80: Старик (80)\n'
-'81-100: Долгожитель (100)\n'""")
+    def test_get_name_plus_age(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
+            f.write("Иванов Иван, 30\nПетров Петр, 25\nСидоров Сидор, 40")
+        self.kino.get_name_plus_age()
+        expected_output = [[30, 'Иванов Иван'], [25, 'Петров Петр'], [40, 'Сидоров Сидор']]
+        self.assertEqual(self.kino.name_plus_age, expected_output)
 
-    def test_no_people(self):
-        with open("input.txt", "w") as f:
+    def test_get_age_groups(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
+            f.write("Иванов Иван, 30\nПетров Петр, 25\nСидоров Сидор, 40")
+        self.kino.get_name_plus_age()
+        self.kino.groups = [20, 30, 40]
+        self.kino.get_age_groups()
+        expected_age_groups = {'21-30': [('Иванов Иван', 30), ('Петров Петр', 25)], '31-40': [('Сидоров Сидор', 40)]}
+        self.assertEqual(self.kino.age_groups, expected_age_groups)
+
+    def test_printer(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
+            f.write("Иванов Иван, 30\nПетров Петр, 25\nСидоров Сидор, 40")
+        self.kino.get_name_plus_age()
+        self.kino.groups = [20, 30, 40]
+        self.kino.get_age_groups()
+        result = self.kino.printer()
+        expected_output = """21-30: Иванов Иван (30), Петров Петр (25) 
+31-40: Сидоров Сидор (40) 
+"""
+        self.assertEqual(result, expected_output)
+
+    def test_result(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
+            f.write("Иванов Иван, 30\nПетров Петр, 25\nСидоров Сидор, 40")
+        self.kino.groups = [20, 30, 40]
+        result = self.kino.result()
+        expected_output = """21-30: Иванов Иван (30), Петров Петр (25) 
+31-40: Сидоров Сидор (40) 
+"""
+        self.assertEqual(result, expected_output)
+
+    def test_result_empty_file(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
             f.write("")
-        self.assertTrue('0 18 25 35 45 60 80', """\
-'0-18: \n'
-'19-25: \n'
-'26-35: \n'
-'36-45: \n'
-'46-55: \n'
-'56-65: \n'
-'66-75: \n'
-'76-80: \n'
-'81-100: \n'""")
+        self.kino.groups = [20, 30, 40]
+        result = self.kino.result()
+        expected_output = ''
+        self.assertEqual(result, expected_output)
 
-    def test_all_in_one_group(self):
-        with open("input.txt", "w") as f:
-            f.write("Дети, 10\n"
-                    "Молодежь, 15\n"
-                    "Подростки, 17\n"
-                    "Юноши, 16\n"
-                    "Девушки, 14\n")
-        self.assertTrue('0 18', """\
-'0-18: Дети (10), Молодежь (15), Подростки (17), Юноши (16), Девушки (14)\n'
-'19-25: \n'
-'26-35: \n'
-'36-45: \n'
-'46-55: \n'
-'56-65: \n'
-'66-75: \n'
-'76-80: \n'
-'81-100: \n'""")
+    def test_result_two_people_same_age(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
+            f.write("Иванов Иван, 30\nПетров Петр, 30")
+        self.kino.groups = [20, 30, 40]
+        result = self.kino.result()
+        expected_output = """21-30: Иванов Иван (30), Петров Петр (30) 
+"""
+        self.assertEqual(result, expected_output)
 
-    def test_multiple_age_groups(self):
-        with open("input.txt", "w") as f:
-            f.write("Аня, 5\n"
-                    "Борис, 20\n"
-                    "Света, 30\n"
-                    "Дмитрий, 40\n"
-                    "Елена, 50\n"
-                    "Федор, 70\n"
-                    "Григорий, 90\n")
-        self.assertTrue('0 18 25 35 45 60 80', """\
-'0-18: Аня (5)\n'
-'19-25: Борис (20)\n'
-'26-35: Света (30)\n'
-'36-45: Дмитрий (40)\n'
-'46-55: Елена (50)\n'
-'56-65: \n'
-'66-75: Федор (70)\n'
-'76-80: \n'
-'81-100: Григорий (90)\n'""")
+    def test_result_person_out_of_range(self):
+        with open("input.txt", "w", encoding='UTF-8') as f:
+            f.write("Иванов Иван, 50")
+        self.kino.groups = [20, 30, 40]
+        result = self.kino.result()
+        expected_output = '40+: Иванов Иван (50) \n'
+        self.assertEqual(result, expected_output)
 
-    def test_edge_case_ages(self):
-        with open("input.txt", "w") as f:
-            f.write("Новорожденный, 0\n"
-                    "Ребенок, 1\n"
-                    "Подросток, 18\n"
-                    "Взрослый, 19\n"
-                    "Старший, 65\n")
-        self.assertTrue('0 18 25 35 45 60 80', """\
-'0-18: Новорожденный (0), Ребенок (1)\n'
-'19-25: Подросток (18), Взрослый (19)\n'
-'26-35: \n'
-'36-45: \n'
-'46-55: \n'
-'56-65: Старший (65)\n'
-'66-75: \n'
-'76-80: \n'
-'81-100: \n'""")
 
 if __name__ == "__main__":
     unittest.main()
+
+

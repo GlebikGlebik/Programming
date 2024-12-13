@@ -5,8 +5,8 @@ class Survey:
         '''
         self.name_plus_age = []
         self.res = ''
-        self.groups = []
-        self.age_groups = {}
+        self.groups = []      #list(map(int, input("Введите границы возрастных групп: ").split()))
+        self.age_groups = {}  #убрал ввод с клавиатуры на время выполнения тестов
 
     def get_name_plus_age(self):
         """
@@ -76,7 +76,6 @@ def main():
     В данной функции инициализируется экземпляр класса и вызывается результирующая функция класса.
     """
     kino = Survey()
-    kino.groups = list(map(int, input().split()))
     res = kino.result()
     print(res)
 
