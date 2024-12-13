@@ -1,6 +1,4 @@
 import unittest
-import tempfile
-import os
 from src.lab3.task1.MovieRecommendation import MovieRecommendation
 
 class MovieRecommendationTestCase(unittest.TestCase):
