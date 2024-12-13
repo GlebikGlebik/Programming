@@ -69,7 +69,6 @@ class TestSurvey(unittest.TestCase):
         expected_output = '40+: Иванов Иван (50) \n'
         self.assertEqual(result, expected_output)
 
-
 if __name__ == "__main__":
     unittest.main()
 
