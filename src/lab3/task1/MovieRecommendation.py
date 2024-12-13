@@ -5,7 +5,7 @@ class MovieRecommendation:
         '''
         self.film_id = ''
         self.users_history = []
-        self.main_user_history = []
+        self.main_user_history = [] #input("Введите id фильмов:",).split(',')
         self.film_name = ''
 
     def films(self):
@@ -76,7 +76,6 @@ def main():
     В данной функции инициализируется экземпляр класса и вызывается результирующая функция класса.
     """
     user = MovieRecommendation()
-    user.main_user_history = input("Введите id фильмов:",).split(',')
     res = user.result()
     print(res)
 
