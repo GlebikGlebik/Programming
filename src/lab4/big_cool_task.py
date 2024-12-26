@@ -7,7 +7,9 @@ class Orders:
         self.failed_2 = []
         self.valid_orders = []
         self.sorted_orders = []
-        with open("input.txt", 'r', encoding="utf-8") as f:
+        self.valid_arr_for_tests = []
+        self.non_valid_arr_for_tests = []
+        with open("txtf/orders.txt", 'r', encoding="utf-8") as f:
             for i in f:
                 line = i.strip().split(';')
                 id = int(line[0])
@@ -57,9 +59,12 @@ class Orders:
             failed.append(i)
         for j in self.failed_1:
             failed.append(j)
-        with open('non_valid_orders.txt', 'w', encoding='utf-8') as f:
+        with open('txtf/non_valid_orders.txt', 'w', encoding='utf-8') as f:
             for i in failed:
                 f.write(i + '\n')
+                self.non_valid_arr_for_tests.append(i + '\n')
+                print(i)
+
 
 
     def group_valid_orders(self):
@@ -104,10 +109,11 @@ class Orders:
         self.sorted_orders = russian_orders + foreign_orders
 
     def write_output(self):
-        with open('order_country', 'w', encoding='utf-8') as f:
+        with open('txtf/order_country', 'w', encoding='utf-8') as f:
             for i in self.sorted_orders:
                 a = str(i['ID'])+';'+str(i['Products'])+';'+str(i['FIO'])+';'+str(i['Address'])+';'+str(i['Number'])+';'+str(i['Priority'])
-                f.write( a + '\n')
+                f.write(a + '\n')
+                self.valid_arr_for_tests.append(a + '\n')
 
     def result_function(self):
         self.check_error_type_one()
